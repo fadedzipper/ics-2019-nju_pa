@@ -24,5 +24,6 @@ int main(){
 	printf("%x\n", cpu.gpr[0]._16);
 	printf("%x\n", cpu.gpr[0]._8[0]);
 	printf("%x\n", cpu.gpr[0]._8[1]);
+	printf("%x\n", cpu.gpr[0]._32);
 	return 0;
 }
