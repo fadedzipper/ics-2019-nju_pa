@@ -69,7 +69,7 @@ static int cmd_x(char* args){
 	int i;
 	uint32_t paddr_read(paddr_t , int);
 	for(i = 0; i < cnt; i++){
-		printf("paddr %0x -> %0x\n", startaddr+4*i, paddr_read(startaddr+4*i, 4));
+		printf("paddr %08x -> %08x\n", startaddr+4*i, paddr_read(startaddr+4*i, 4));
 	}
 	return 0;
 }
