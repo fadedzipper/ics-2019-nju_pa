@@ -36,6 +36,44 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char* args){
+	if(args == NULL){
+		cpu_exec(1);
+	}
+	else{
+		int cnt;
+		sscanf(args, "%d", &cnt);
+		cpu_exec(cnt);
+	}
+	return 0;
+}
+
+static int cmd_info(char* args){
+	void isa_reg_display();
+	if(args != NULL && strcmp(args , "r") == 0){
+		isa_reg_display();
+	}
+	return 0;
+}
+
+static int cmd_x(char* args){
+	if(args == NULL){
+		printf("Please indicate paddr and size");
+		return 0;
+	}
+	char* x = strtok(args, " ");
+	char* addr = x + strlen(x) + 1;
+	int startaddr, cnt;
+	sscanf(addr, "%x", &startaddr);
+	sscanf(x, "%d", &cnt);
+	int i;
+	uint32_t paddr_read(paddr_t , int);
+	cnt = cnt / 4 + 1;
+	for(i = 0; i < cnt; i++){
+		printf("paddr %x -> %x\n", startaddr+4*i, paddr_read(startaddr, 4));
+	}
+	return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -46,7 +84,9 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Execution by step", cmd_si},
+  { "info", "Print Registers or ...", cmd_info},
+  { "x", "Scan Memory", cmd_x}
   /* TODO: Add more commands */
 
 };
