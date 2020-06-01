@@ -5,9 +5,18 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <assert.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, 
+  TK_EQ,
+  TK_ADD,
+  TK_LP,
+  TK_RP,
+  TK_MINUS,
+  TK_STAR,
+  TK_DIV,
+  TK_INT
 
   /* TODO: Add more token types */
 
@@ -23,8 +32,14 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\+", TK_ADD},         // plus
+  {"==", TK_EQ},         // equal
+  {"(", TK_LP},
+  {")", TK_RP},
+  {"-", TK_MINUS},
+  {"\\*", TK_STAR},
+  {"/", TK_DIV},
+  {"[1-9][0-9]*", TK_INT}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -78,9 +93,19 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
         switch (rules[i].token_type) {
-          default: TODO();
+			case TK_INT :		
+				tokens[nr_token].type = TK_INT;
+				int j;
+				for(j = 0; j < substr_len && j < 31; j++){
+					tokens[nr_token].str[j] = substr_start[j];
+				}
+				tokens[nr_token].str[j] = '\0';
+				break;
+				
+          default: 
+				tokens[nr_token].type = rules[i].token_type;
+				break;
         }
 
         break;
@@ -91,10 +116,12 @@ static bool make_token(char *e) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
+	nr_token++;
   }
 
   return true;
 }
+
 
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -106,4 +133,12 @@ uint32_t expr(char *e, bool *success) {
   TODO();
 
   return 0;
+}
+
+void test_make_token(void){
+	assert(make_token("   ") == true);
+	assert(make_token("*/-+") == true);
+	assert(make_token("12347") == true);
+	assert(make_token("()") == true);
+	assert(make_token("==") == true);
 }
