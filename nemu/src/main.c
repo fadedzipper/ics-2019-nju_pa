@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   /* Receive commands from user. */
  // ui_mainloop(is_batch_mode);
 	bool success = true;
-	char *str = "50";
+	char *str = "()";
 	uint32_t x = expr(str, &success);
 	printf("%d", x);
 //	FILE *fp = fopen("../tools/gen-expr/input", "r");
