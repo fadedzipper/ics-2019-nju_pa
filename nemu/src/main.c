@@ -13,14 +13,14 @@ int main(int argc, char *argv[]) {
   /* Receive commands from user. */
  // ui_mainloop(is_batch_mode);
 	bool success = true;
-	FILE *fp = NULL;
-	fp = fopen("~/ics2019/nemu/tools/gen-expr/input", "r");
+	FILE *fp = fopen("../tools/gen-expr/input", "r");
 	assert(fp != NULL);
 	unsigned int result = 0;
 	char inputexprbuf[65536];
 	int ret = 0;
 	int line = 0;
-	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf) != EOF)){
+	char *str = "50 50";
+	while((ret = sscanf(str, "%u %s", &result, inputexprbuf) != EOF)){
 		if(result == expr(inputexprbuf, &success)){
 			printf("success\n");
 		}
@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
 			printf("failed in %d line\n", ++line);
 		}
 	}
+	fclose(fp);
 
   return 0;
 }
