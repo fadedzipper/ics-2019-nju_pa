@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
  // ui_mainloop(is_batch_mode);
 	bool success = true;
 	FILE *fp = NULL;
-	fp = fopen("../tools/gen-expr/input", "r");
+	fp = fopen("~/ics2019/nemu/tools/gen-expr/input", "r");
 	assert(fp != NULL);
 	unsigned int result = 0;
 	char inputexprbuf[65536];
