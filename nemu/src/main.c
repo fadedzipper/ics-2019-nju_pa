@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
  // ui_mainloop(is_batch_mode);
 	bool success = true;
 	FILE *fp = fopen("../tools/gen-expr/input", "r");
-	assert(fp != NULL);
+//	assert(fp != NULL);
 	unsigned int result = 0;
 	char inputexprbuf[65536];
 	int ret = 0;
