@@ -18,6 +18,7 @@ typedef struct {
 
 
 } CPU_state;
+
 int main(){
 	CPU_state cpu;
 	cpu.gpr[0]._32 = 0x87654321;
