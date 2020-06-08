@@ -85,6 +85,7 @@ static bool make_token(char *e){
     while (e[position] != '\0') {
 	/* Try all rules one by one. */
 		for (i = 0; i < NR_REGEX; i++) {
+				printf("program is to exeutive the segment fault");
 		    if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0
 				&& pmatch.rm_so == 0) {
 				char *substr_start = e + position;
@@ -250,6 +251,7 @@ uint32_t eval(int p, int q, bool * success)
 
 uint32_t expr(char *e, bool * success)
 {
+	printf("insert expr functions\n");
     if (!make_token(e)) {
 		*success = false;
 		return 0;
