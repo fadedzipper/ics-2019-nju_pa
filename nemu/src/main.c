@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "nemu.h"
 #include <stddef.h>
+#include <errno.h>
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
 
@@ -18,6 +19,10 @@ int main(int argc, char *argv[]) {
 //	bool success = true;
 //
 	FILE *fp = fopen("~/ics2019/nemu/tools/gen-expr/input", "r");
+	if(fp == NULL){
+		perror("fopen (\"~/ics2019/nemu/tools/gen-expr/input\")");
+	}
+
 	assert(fp != NULL);
 //	unsigned int result = 0;
 //	char inputexprbuf[65536];
