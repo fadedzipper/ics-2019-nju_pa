@@ -3,8 +3,8 @@
 #include <stddef.h>
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
-uint32_t expr(char *e, bool *success);
-void init_regex();
+extern uint32_t expr(char *e, bool *success);
+extern void init_regex();
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
