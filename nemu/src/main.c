@@ -19,9 +19,6 @@ int main(int argc, char *argv[]) {
 //	bool success = true;
 //
 	FILE *fp = fopen("~/ics2019/nemu/tools/gen-expr/input", "r");
-	if(fp == NULL){
-		perror("fopen (\"~/ics2019/nemu/tools/gen-expr/input\")");
-	}
 
 	assert(fp != NULL);
 //	unsigned int result = 0;
