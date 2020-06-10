@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
 	int line = 1;
 
 	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf)) != EOF){
+		printf("gain the input str %d %s\n", line, inputexprbuf);
 		if(result == expr(inputexprbuf, &success)){
 			printf("success\n");
 			memset(inputexprbuf, 0, sizeof(inputexprbuf));
