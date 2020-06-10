@@ -23,16 +23,18 @@ int main(int argc, char *argv[]) {
 	unsigned int result = 0;
 	char inputexprbuf[65536];
 	int ret = 0;
-	int line = 0;
+	int line = 1;
 
 	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf)) != EOF){
 		if(result == expr(inputexprbuf, &success)){
 			printf("success\n");
+			memset(inputexprbuf, 0, sizeof(inputexprbuf));
 		}
 		else{
-			printf("failed in %d line\n", ++line);
+			printf("failed in %d line\n", line);
 			break;
 		}
+		line++;
 	}
 	fclose(fp);
 
