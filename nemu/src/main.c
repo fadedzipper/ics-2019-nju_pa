@@ -16,25 +16,23 @@ int main(int argc, char *argv[]) {
 
 	init_regex();
 	bool success = true;
-	char str[65536] = "(2)";
-	uint32_t x = expr(str, &success);
-	printf("%d", x);
-//	FILE *fp = fopen("../tools/gen-expr/input", "r");
-//	assert(fp != NULL);
-//	unsigned int result = 0;
-//	char inputexprbuf[65536];
-//	int ret = 0;
-//	int line = 0;
-//	char *str = "50 50";
-//	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf) != EOF)){
-//		if(result == expr(inputexprbuf, &success)){
-//			printf("success\n");
-//		}
-//		else{
-//			printf("failed in %d line\n", ++line);
-//		}
-//	}
-//	fclose(fp);
+
+	FILE *fp = fopen("../tools/gen-expr/input", "r");
+	assert(fp != NULL);
+	unsigned int result = 0;
+	char inputexprbuf[65536];
+	int ret = 0;
+	int line = 0;
+	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf) != EOF)){
+		if(result == expr(inputexprbuf, &success)){
+			printf("success\n");
+		}
+		else{
+			printf("failed in %d line\n", ++line);
+			break;
+		}
+	}
+	fclose(fp);
 
   return 0;
 }
