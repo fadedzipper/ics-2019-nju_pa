@@ -22,20 +22,27 @@ int main(int argc, char *argv[]) {
 	assert(fp != NULL);
 	unsigned int result = 0;
 	char inputexprbuf[65536];
-	int ret = 0;
-	int line = 1;
+	size_t len = 0;
+	ssize_t read;
+	char *line = NULL;
+	int fileline = 1;
 
-	while((ret = fscanf(fp, "%u %s", &result, inputexprbuf)) != EOF){
-		printf("gain the input str %d %s\n", line, inputexprbuf);
-		if(result == expr(inputexprbuf, &success)){
+	while((read = getline(&line, &len, fp)) != EOF){
+		assert(strlen(line) < 65536);
+		strcat(inputexprbuf, line);
+		char x[20];
+		sscanf(inputexprbuf, "%s", x);
+		int x_len = strlen(x);
+		sscanf(inputexprbuf, "%u", &result);
+		if(result == expr(line + x_len+1, &success)){
 			printf("success\n");
 			memset(inputexprbuf, 0, sizeof(inputexprbuf));
 		}
 		else{
-			printf("failed in %d line\n", line);
+			printf("error occurs in %d\n", fileline);
 			break;
 		}
-		line++;
+		fileline++;
 	}
 	fclose(fp);
 
