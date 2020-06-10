@@ -1,4 +1,3 @@
-#include "nemu.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -8,7 +7,12 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
+typedef unsigned int uint32_t;
+typedef int bool;
+#define false 0
+#define true 1
 enum {
     TK_NOTYPE = 256,
     TK_EQ,
@@ -45,7 +49,7 @@ static struct rule {
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
 
-static regex_t re[NR_REGEX] = {};
+static regex_t re[NR_REGEX] = { };
 
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
@@ -60,8 +64,6 @@ void init_regex()
 		ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
 		if (ret != 0) {
 		    regerror(ret, &re[i], error_msg, 128);
-		    panic("regex compilation failed: %s\n%s", error_msg,
-			  rules[i].regex);
 		}
     }
 }
@@ -90,7 +92,7 @@ static bool make_token(char *e){
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 	
-				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+	//			printf("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 	
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -105,10 +107,10 @@ static bool make_token(char *e){
 					tokens[nr_token].str[substr_len] = '\0';
 					nr_token++;
 				    break;
-	
+
 				case TK_NOTYPE:
 					break;
-
+	
 				default:
 				    tokens[nr_token].type = rules[i].token_type;
 					nr_token++;
@@ -194,7 +196,7 @@ int find_maincalsymbol(int p, int q)
 		    highlevelpos = i;
 		}
     }
-    //assert(lowlevelpos == -1 && highlevelpos == -1);	//if this failed ,indicate check_pathese... is wrong. 
+//    assert(lowlevelpos != -1 || highlevelpos != -1);	//if this failed ,indicate check_pathese... is wrong. 
 	int result = (lowlevelpos == -1) ? highlevelpos : lowlevelpos;
 	assert(result != -1);
 	return result;
@@ -271,24 +273,43 @@ uint32_t expr(char *e, bool * success)
     return 0;
 }
 
-//int main(void){
-///* 例如在check_parentheses()函数中, (4 + 3)) * ((2 - 1)和(4 + 3) * (2 - 1)这两个表达式虽然都返回false, 因为前一种情况是表达式不合法, 是没有办法成功进行求值的; 而后一种情况是一个合法的表达式, 是可以成功求值的,*/ 
-///*	"(2 - 1)"             // true
-//	"(4 + 3 * (2 - 1))"   // true
-//	"4 + 3 * (2 - 1)"     // false, the whole expression is not surrounded by a matched
-//	                      // pair of parentheses
-//	"(4 + 3)) * ((2 - 1)" // false, bad expression
-//	"(4 + 3) * (2 - 1)"   // false, the leftmost '(' and the rightmost ')' are not matched */
+int main(void){
+/* 例如在check_parentheses()函数中, (4 + 3)) * ((2 - 1)和(4 + 3) * (2 - 1)这两个表达式虽然都返回false, 因为前一种情况是表达式不合法, 是没有办法成功进行求值的; 而后一种情况是一个合法的表达式, 是可以成功求值的,*/ 
+/*	"(2 - 1)"             // true
+	"(4 + 3 * (2 - 1))"   // true
+	"4 + 3 * (2 - 1)"     // false, the whole expression is not surrounded by a matched
+	                      // pair of parentheses
+	"(4 + 3)) * ((2 - 1)" // false, bad expression
+	"(4 + 3) * (2 - 1)"   // false, the leftmost '(' and the rightmost ')' are not matched */
+//	int nr = 10; 
 //	tokens[0].type = TK_LP;
 //	tokens[1].type = TK_INT;
-//	tokens[2].type = TK_MINUS;
+//	tokens[2].type = TK_ADD;
 //	tokens[3].type = TK_INT;
 //	tokens[4].type = TK_RP;
+//	tokens[5].type = TK_STAR;
+//	tokens[6].type = TK_LP;
+//	tokens[7].type = TK_INT;
+//	tokens[8].type = TK_MINUS;
+//	tokens[9].type = TK_INT;
+//	tokens[10].type = TK_RP;
 //	
-//	strcat(tokens[1].str, "2");
-//	strcat(tokens[3].str, "1");
-//
-//	bool success = true;
-//	printf("%u", eval(0, 4, success));
-//	return 0;
-//}
+//	strcat(tokens[1].str, "4");
+//	strcat(tokens[3].str, "3");
+//	strcat(tokens[7].str, "2");
+//	strcat(tokens[9].str, "1");
+	init_regex();
+
+	bool success = true;
+	//int result = eval(0, nr, &success);
+	//int result = check_parentheses(0, 10, &success);
+	char str[100] = "(4 + 3)) * ((2 - 1)";
+	int result = expr(str, &success);
+	if(success == true){
+		printf("%d\n", result);
+	}
+	else{
+		printf("not a valid expression\n");
+	}
+	return 0;
+}

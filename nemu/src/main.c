@@ -4,7 +4,7 @@
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
 uint32_t expr(char *e, bool *success);
-
+void init_regex();
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
 //
 //  /* Receive commands from user. */
 //	ui_mainloop(is_batch_mode);
+	init_regex();
 	bool success = true;
 	char str[65536] = "(2)";
 	uint32_t x = expr(str, &success);
