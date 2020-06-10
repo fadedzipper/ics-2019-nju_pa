@@ -258,6 +258,7 @@ uint32_t eval(int p, int q, bool * success)
 uint32_t expr(char *e, bool * success)
 {
 //	printf("insert expr functions\n");
+	printf("the number of rules is %lu\n", NR_REGEX);
     if (!make_token(e)) {
 		*success = false;
 		return 0;
