@@ -41,7 +41,8 @@ static struct rule {
 	{ "/", TK_DIV}, 
 	{ "[1-9][0-9]*", TK_INT}, 
 	{ "u", TK_NOTYPE},
-	{ "\"\\n\"", TK_NOTYPE}
+	{ "\"\\n\"", TK_NOTYPE},
+	{ "\"\\r\"", TK_NOTYPE}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
