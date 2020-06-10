@@ -3,8 +3,7 @@
 #include <stddef.h>
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
-extern uint32_t expr(char *e, bool *success);
-extern void init_regex();
+
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
@@ -12,6 +11,9 @@ int main(int argc, char *argv[]) {
 //
 //  /* Receive commands from user. */
 //	ui_mainloop(is_batch_mode);
+	void init_regex();
+	uint32_t expr(char *, bool *);
+
 	init_regex();
 	bool success = true;
 	char str[65536] = "(2)";
