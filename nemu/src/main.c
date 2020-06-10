@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 //	init_regex();
 //	bool success = true;
 //
-	FILE *fp = fopen("../tools/gen-expr/input", "r");
+	FILE *fp = fopen("~/ics2019/nemu/tools/gen-expr/input", "r");
 	assert(fp != NULL);
 //	unsigned int result = 0;
 //	char inputexprbuf[65536];
