@@ -45,7 +45,7 @@ static struct rule {
 	{ "-", TK_MINUS}, 
 	{ "\\*", TK_STAR}, 
 	{ "/", TK_DIV}, 
-	{ "[1-9][0-9]*", TK_INT}, 
+	{ "[0-9]+", TK_INT}, 
 	{ "u", TK_NOTYPE},
 	{ "\n", TK_NOTYPE},
 	{ "!=", TK_NONEQ},
