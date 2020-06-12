@@ -358,7 +358,7 @@ uint32_t expr(char *e, bool * success)
 
 	int i;
 	for (i = 0; i < nr_token; i ++) {
-	  if (tokens[i].type == '*' && (i == 0 
+	  if (tokens[i].type == TK_STAR && (i == 0 
 		  || tokens[i - 1].type == TK_LP
 		  || tokens[i - 1].type == TK_ADD
 		  || tokens[i - 1].type == TK_MINUS
