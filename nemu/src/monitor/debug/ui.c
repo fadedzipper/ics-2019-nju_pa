@@ -74,7 +74,14 @@ static int cmd_x(char* args){
 	return 0;
 }
 static int cmd_p(char* args){
-		
+	bool success = true;
+	uint32_t result = expr(args, &success);
+	if(success == true){
+		printf("%08x\n", result);
+	}
+	else{
+		printf("Expression is not legal\n");
+	}
 	return 0;
 }
 static int cmd_help(char *args);

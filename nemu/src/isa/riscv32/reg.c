@@ -1,4 +1,6 @@
 #include "nemu.h"
+#include <stdio.h>
+#include <string.h>
 
 const char *regsl[] = {
   "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
@@ -7,13 +9,36 @@ const char *regsl[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
+extern CPU_state cpu;
 void isa_reg_display() {
-	extern CPU_state cpu;
 	for(int i = 0; i < 32; i++){
 		printf("%s -> %x\n", regsl[i], cpu.gpr[i]._32);
 	}
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {
-  return 0;
+	if(s[1] <= '9' && s[1] >= '0'){
+		int x = 0;
+		sscanf(s+1, "%d", &x);
+		if(x < 0 || x > 31){
+			*success = false;
+			return 0;
+		}
+		return cpu.gpr[x]._32;
+
+	}
+	else{
+		int i;
+		for(i = 0; i < 32; i++){
+			if(strcmp(regsl[i], s+1) == 0){
+				break;
+			}
+		}
+		if(i == 32){
+			*success = false;
+			return 0;
+		}
+		return cpu.gpr[i]._32;
+	}
+	return 0;
 }

@@ -18,7 +18,13 @@ enum {
     TK_MINUS,
     TK_STAR,
     TK_DIV,
-    TK_INT
+    TK_INT,
+	TK_DEREF,
+	TK_HEXINT,
+	TK_REGISTER_VALUE,
+	TK_NONEQ,
+	TK_AND,
+	TK_PREFIXMINUS
 	/* TODO: Add more token types */
 };
 
@@ -41,7 +47,11 @@ static struct rule {
 	{ "/", TK_DIV}, 
 	{ "[1-9][0-9]*", TK_INT}, 
 	{ "u", TK_NOTYPE},
-	{ "\n", TK_NOTYPE}
+	{ "\n", TK_NOTYPE},
+	{ "!=", TK_NONEQ},
+	{ "0x[0-9|a-z]+", TK_HEXINT},
+	{ "\\$[0-9|a-z]+", TK_REGISTER_VALUE},
+	{ "&&", TK_AND}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -51,8 +61,7 @@ static regex_t re[NR_REGEX] = {};
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
  */
-void init_regex()
-{
+void init_regex() {
     int i;
     char error_msg[128];
     int ret;
@@ -106,6 +115,21 @@ static bool make_token(char *e){
 					tokens[nr_token].str[substr_len] = '\0';
 					nr_token++;
 				    break;
+
+				case TK_HEXINT:
+					tokens[nr_token].type = TK_HEXINT;
+					assert(substr_len < 11);
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
+					nr_token++;
+					break;
+
+				case TK_REGISTER_VALUE:
+					tokens[nr_token].type = TK_REGISTER_VALUE;
+					assert(substr_len < 35);
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
+					nr_token++;
 	
 				case TK_NOTYPE:
 					break;
@@ -174,8 +198,11 @@ bool check_parentheses(int p, int q, bool * success)
 
 int find_maincalsymbol(int p, int q)
 {
-    int lowlevelpos = -1;	//low priority symbol
-    int highlevelpos = -1;	//high priority symbol
+    int STAR_levelpos = -1;	//high priority symbol
+    int ADD_levelpos = -1;	//low priority symbol
+	int EQ_levelpos = -1;
+	int AND_levelpos = -1;
+
     int i, inLP = 0;
     for (i = p; i <= q; i++) {
 		if (tokens[i].type == TK_LP) {
@@ -188,18 +215,48 @@ int find_maincalsymbol(int p, int q)
 		    continue;
 		}
 	
-		if (tokens[i].type == TK_ADD || tokens[i].type == TK_MINUS) {
-		    lowlevelpos = i;
-		}
+		/* go down with priority less*/
 		if (tokens[i].type == TK_STAR || tokens[i].type == TK_DIV) {
-		    highlevelpos = i;
+		    STAR_levelpos = i;
+		}
+		if (tokens[i].type == TK_ADD || tokens[i].type == TK_MINUS) {
+		    ADD_levelpos = i;
+		}
+		if (tokens[i].type == TK_NONEQ || tokens[i].type == TK_EQ){
+			EQ_levelpos = i;
+		}
+		if (tokens[i].type == TK_AND){
+			AND_levelpos = i;
 		}
     }
-    //assert(lowlevelpos == -1 && highlevelpos == -1);	//if this failed ,indicate check_pathese... is wrong. 
-	int result = (lowlevelpos == -1) ? highlevelpos : lowlevelpos;
+    //assert(ADD_levelpos == -1 && STAR_levelpos == -1);	//if this failed ,indicate check_pathese... is wrong. 
+	uint32_t result = 0;
+	if(STAR_levelpos == -1){
+		if(ADD_levelpos == -1){
+			if(EQ_levelpos == -1){
+				if(AND_levelpos == -1){
+					result = -1;
+				}
+				else{
+					result = AND_levelpos;
+				}
+			}
+			else{
+				result = EQ_levelpos;
+			}
+		}
+		else{
+			result = ADD_levelpos;
+		}
+	}
+	else{
+		result = STAR_levelpos;
+	}
 	assert(result != -1);
 	return result;
 }
+
+uint32_t isa_reg_str2val(const char *, bool *);
 
 uint32_t eval(int p, int q, bool * success)
 {
@@ -213,11 +270,20 @@ uint32_t eval(int p, int q, bool * success)
 		 * For now this token should be a number.
 		 * Return the value of the number.
 		 */
-		if (tokens[p].type != TK_INT) {
-		    *success = false;
-		    return 0;
+		uint32_t val = 0;
+		switch (tokens[p].type){
+			case TK_INT:
+				val = (uint32_t) atoi(tokens[p].str);
+				break;
+			
+			case TK_HEXINT:
+				sscanf(tokens[p].str, "%x", &val);
+				break;
+
+			case TK_REGISTER_VALUE:
+				val = isa_reg_str2val(tokens[p].str, success);
+				break;
 		}
-		uint32_t val = (uint32_t) atoi(tokens[p].str);
 		return val;
     } 
 	else if (check_parentheses(p, q, success) == true) {
@@ -227,30 +293,54 @@ uint32_t eval(int p, int q, bool * success)
 		return eval(p + 1, q - 1, success);
     }
 	else {
-		if (*success == false) {
-		    return 0;
+		if(*success == false){
+			return 0;
 		}
-		int op = find_maincalsymbol(p, q);
-		uint32_t val1 = eval(p, op - 1, success);
-		if (*success == false) {
-		    return 0;
+		if(p + 1 == q){
+			uint32_t val = 0;
+			assert(tokens[p].type == TK_DEREF);
+			uint32_t paddr_read(paddr_t, int);
+			val = eval(p+1, q, success);
+			if(*success == false){
+				return 0;
+			}
+			val = paddr_read(val, 1);
+			return val;
 		}
-		uint32_t val2 = eval(op + 1, q, success);
-		if (*success == false) {
-		    return 0;
-		}
-	
-		switch (tokens[op].type) {
-		case TK_ADD:
-		    return val1 + val2;
-		case TK_MINUS:
-		    return val1 - val2;
-		case TK_STAR:
-		    return val1 * val2;
-		case TK_DIV:
-		    return val1 / val2;
-		default:
-		    assert(0);
+		else{
+			int op = find_maincalsymbol(p, q);
+			uint32_t val1 = eval(p, op - 1, success);
+			if (*success == false) {
+			    return 0;
+			}
+			uint32_t val2 = eval(op + 1, q, success);
+			if (*success == false) {
+			    return 0;
+			}
+		
+			switch (tokens[op].type) {
+			case TK_ADD:
+			    return val1 + val2;
+			case TK_MINUS:
+			    return val1 - val2;
+			case TK_STAR:
+			    return val1 * val2;
+			case TK_DIV:
+				if(val2 == 0){
+					*success = false;
+					return 0;
+				}
+			    return val1 / val2;
+			case TK_EQ:
+				return (val1 == val2) ? 1 : 0;
+			case TK_NONEQ:
+				return (val1 != val2) ? 1 : 0;
+			case TK_AND:
+				return (val1 == 1 && val2 == 1) ? 1 : 0;
+
+			default:
+			    assert(0);
+			}
 		}
     }
 }
@@ -258,12 +348,27 @@ uint32_t eval(int p, int q, bool * success)
 uint32_t expr(char *e, bool * success)
 {
 //	printf("insert expr functions\n");
-	printf("the number of rules is %lu\n", NR_REGEX);
+//	printf("the number of rules is %lu\n", NR_REGEX);
     if (!make_token(e)) {
 		*success = false;
 		return 0;
     }
 
+	int i;
+	for (i = 0; i < nr_token; i ++) {
+	  if (tokens[i].type == '*' && (i == 0 || 
+		  tokens[i - 1].type == TK_LP ||
+		  tokens[i - 1].type == TK_ADD ||
+		  tokens[i - 1].type == TK_MINUS ||
+		  tokens[i - 1].type == TK_STAR ||
+		  tokens[i - 1].type == TK_DIV ||
+		  tokens[i - 1].type == TK_EQ ||
+		  tokens[i - 1].type == TK_NONEQ ||
+		  tokens[i - 1].type == TK_AND
+		  ) ) {
+	    tokens[i].type = TK_DEREF;
+	  }
+	}
     /* TODO: Insert codes to evaluate the expression. */
     uint32_t val = eval(0, nr_token - 1, success);
     if (*success == true) {
