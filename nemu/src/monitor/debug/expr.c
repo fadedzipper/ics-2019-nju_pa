@@ -358,19 +358,21 @@ uint32_t expr(char *e, bool * success)
 
 	int i;
 	for (i = 0; i < nr_token; i ++) {
-	  if (tokens[i].type == '*' && (i == 0 || 
-		  tokens[i - 1].type == TK_LP ||
-		  tokens[i - 1].type == TK_ADD ||
-		  tokens[i - 1].type == TK_MINUS ||
-		  tokens[i - 1].type == TK_STAR ||
-		  tokens[i - 1].type == TK_DIV ||
-		  tokens[i - 1].type == TK_EQ ||
-		  tokens[i - 1].type == TK_NONEQ ||
-		  tokens[i - 1].type == TK_AND
+	  if (tokens[i].type == '*' && (i == 0 
+		  || tokens[i - 1].type == TK_LP
+		  || tokens[i - 1].type == TK_ADD
+		  || tokens[i - 1].type == TK_MINUS
+		  || tokens[i - 1].type == TK_STAR
+		  || tokens[i - 1].type == TK_DIV
+		  || tokens[i - 1].type == TK_EQ
+		  || tokens[i - 1].type == TK_NONEQ
+		  || tokens[i - 1].type == TK_AND
 		  ) ) {
 	    tokens[i].type = TK_DEREF;
+		printf("reached here\n");
 	  }
 	}
+
     /* TODO: Insert codes to evaluate the expression. */
     uint32_t val = eval(0, nr_token - 1, success);
     if (*success == true) {
