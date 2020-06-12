@@ -292,7 +292,12 @@ uint32_t eval(int p, int q, bool * success)
 		/* The expression is surrounded by a matched pair of parentheses.
 		 * If that is the case, just throw away the parentheses.
 		 */
-		return eval(p + 1, q - 1, success);
+		int val = eval(p + 1, q - 1, success);
+		if(*success == false){
+			return 0;
+		}
+		printf("check_parentheses position %x\n", val);
+		return val;
     }
 	else {
 		if(*success == false){
