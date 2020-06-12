@@ -35,6 +35,7 @@ static struct rule {
 
     /* TODO: Add more rules.
      * Pay attention to the precedence level of different rules.
+	 * go down with lower priority
      */
 
     { " +", TK_NOTYPE},		// spaces
@@ -45,11 +46,11 @@ static struct rule {
 	{ "-", TK_MINUS}, 
 	{ "\\*", TK_STAR}, 
 	{ "/", TK_DIV}, 
-	{ "[0-9]+", TK_INT}, 
 	{ "u", TK_NOTYPE},
 	{ "\n", TK_NOTYPE},
 	{ "!=", TK_NONEQ},
 	{ "0x[0-9|a-z]+", TK_HEXINT},
+	{ "[0-9]+", TK_INT},	// no (8 to 1) and this line must be down compared to TK_HEXINT
 	{ "\\$[0-9|a-z]+", TK_REGISTER_VALUE},
 	{ "&&", TK_AND}
 };
