@@ -256,7 +256,6 @@ int find_maincalsymbol(int p, int q)
 	return result;
 }
 
-uint32_t isa_reg_str2val(const char *, bool *);
 
 uint32_t eval(int p, int q, bool * success)
 {
@@ -280,9 +279,11 @@ uint32_t eval(int p, int q, bool * success)
 				sscanf(tokens[p].str, "%x", &val);
 				break;
 
-			case TK_REGISTER_VALUE:
+			case TK_REGISTER_VALUE: {
+				uint32_t isa_reg_str2val(const char *, bool *);
 				val = isa_reg_str2val(tokens[p].str, success);
 				break;
+			}
 		}
 		return val;
     } 
