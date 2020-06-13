@@ -309,14 +309,27 @@ uint32_t eval(int p, int q, bool * success)
 		}
 		if(p + 1 == q){
 			uint32_t val = 0;
-			assert(tokens[p].type == TK_DEREF);
-			uint32_t paddr_read(paddr_t, int);
-			val = eval(p+1, q, success);
-			if(*success == false){
-				return 0;
+			if(tokens[p].type == TK_DEREF){
+				uint32_t paddr_read(paddr_t, int);
+				val = eval(p+1, q, success);
+				if(*success == false){
+					return 0;
+				}
+				val = paddr_read(val, 1);
+				return val;
 			}
-			val = paddr_read(val, 1);
-			return val;
+			else if(tokens[p].type == TK_PREFIXMINUS){
+				val = eval(p+1, q, success);
+				if(*success == false){
+					return 0;
+				}
+				val = ~val +1;
+				return val;
+			}
+			else{
+				/* now impossibly get other situation*/
+				assert(0);
+			}
 		}
 		else{
 			int op = find_maincalsymbol(p, q);
@@ -378,10 +391,23 @@ uint32_t expr(char *e, bool * success)
 		  || tokens[i - 1].type == TK_AND
 		  ) ) {
 	    tokens[i].type = TK_DEREF;
-	//	printf("reached here\n");
 	  }
 	}
 
+	for (i = 0; i < nr_token; i ++) {
+	  if (tokens[i].type == TK_MINUS && (i == 0 
+		  || tokens[i - 1].type == TK_LP
+		  || tokens[i - 1].type == TK_ADD
+		  || tokens[i - 1].type == TK_MINUS
+		  || tokens[i - 1].type == TK_STAR
+		  || tokens[i - 1].type == TK_DIV
+		  || tokens[i - 1].type == TK_EQ
+		  || tokens[i - 1].type == TK_NONEQ
+		  || tokens[i - 1].type == TK_AND
+		  ) ) {
+	    tokens[i].type = TK_PREFIXMINUS;
+	  }
+	}
     /* TODO: Insert codes to evaluate the expression. */
     uint32_t val = eval(0, nr_token - 1, success);
     if (*success == true) {
