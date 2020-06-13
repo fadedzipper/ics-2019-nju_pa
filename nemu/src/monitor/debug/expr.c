@@ -230,29 +230,33 @@ int find_maincalsymbol(int p, int q)
 			AND_levelpos = i;
 		}
     }
-    //assert(ADD_levelpos == -1 && STAR_levelpos == -1);	//if this failed ,indicate check_pathese... is wrong. 
+	
+	/* the if outside has higher priority to select ,and we need
+	 * to find the lowest priority in whole expression according
+	 * with reducity process*/
 	uint32_t result = 0;
-	if(STAR_levelpos == -1){
-		if(ADD_levelpos == -1){
-			if(EQ_levelpos == -1){
-				if(AND_levelpos == -1){
+	if(AND_levelpos == -1){
+		if(EQ_levelpos == -1){
+			if(ADD_levelpos == -1){
+				if(STAR_levelpos == -1){
 					result = -1;
 				}
 				else{
-					result = AND_levelpos;
+					result = STAR_levelpos;
 				}
 			}
 			else{
-				result = EQ_levelpos;
+				result = ADD_levelpos;
 			}
 		}
 		else{
-			result = ADD_levelpos;
+			result = EQ_levelpos;
 		}
 	}
 	else{
-		result = STAR_levelpos;
+		result = AND_levelpos;
 	}
+
 	assert(result != -1);
 	return result;
 }
@@ -296,7 +300,7 @@ uint32_t eval(int p, int q, bool * success)
 		if(*success == false){
 			return 0;
 		}
-		printf("check_parentheses position %08x\n", val);
+		printf("check_parentheses position %x\n", val);
 		return val;
     }
 	else {
@@ -327,7 +331,6 @@ uint32_t eval(int p, int q, bool * success)
 		
 			switch (tokens[op].type) {
 			case TK_ADD:
-				printf("%08x + %08x\n", val1, val2);
 			    return val1 + val2;
 			case TK_MINUS:
 			    return val1 - val2;
