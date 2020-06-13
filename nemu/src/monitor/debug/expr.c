@@ -319,6 +319,7 @@ uint32_t eval(int p, int q, bool * success)
 				return val;
 			}
 			else if(tokens[p].type == TK_PREFIXMINUS){
+				/* only set a minus number to its two's complement*/
 				val = eval(p+1, q, success);
 				if(*success == false){
 					return 0;
