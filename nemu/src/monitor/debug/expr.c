@@ -296,7 +296,7 @@ uint32_t eval(int p, int q, bool * success)
 		if(*success == false){
 			return 0;
 		}
-		printf("check_parentheses position %x\n", val);
+		printf("check_parentheses position %08x\n", val);
 		return val;
     }
 	else {
@@ -327,6 +327,7 @@ uint32_t eval(int p, int q, bool * success)
 		
 			switch (tokens[op].type) {
 			case TK_ADD:
+				printf("%08x + %08x\n", val1, val2);
 			    return val1 + val2;
 			case TK_MINUS:
 			    return val1 - val2;
