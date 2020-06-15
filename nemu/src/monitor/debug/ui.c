@@ -54,9 +54,9 @@ static int cmd_info(char* args){
 		isa_reg_display();
 	}
 	else if(args != NULL && strcmp(args, "w") == 0){
-		printf("reach here\n");
+		//printf("reach here\n");
 		WP *wp = get_unallocated();
-		WP *temp = wp;
+		WP *temp = wp->next;
 		for(; temp != wp; temp = temp->next){
 			printf("Watchpoint %d : %s %08x\n", temp->NO, temp->expression, temp->old_val);
 		}
