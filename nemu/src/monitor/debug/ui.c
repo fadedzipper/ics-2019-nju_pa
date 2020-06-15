@@ -58,7 +58,7 @@ static int cmd_info(char* args){
 		WP *wp = get_unallocated();
 		WP *temp = wp->next;
 		for(; temp != wp; temp = temp->next){
-			printf("Watchpoint %d : %s %08x\n", temp->NO, temp->expression, temp->old_val);
+			printf("Watchpoint %d : %s -> %08x\n", temp->NO, temp->expression, temp->old_val);
 		}
 	}
 	return 0;
