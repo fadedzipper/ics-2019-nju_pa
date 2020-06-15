@@ -1,6 +1,7 @@
 #include "nemu.h"
 #include "monitor/monitor.h"
 #include "monitor/watchpoint.h"
+#include "monitor/expr.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -45,6 +46,34 @@ void cpu_exec(uint64_t n) {
      * instruction decode, and the actual execution. */
     __attribute__((unused)) vaddr_t seq_pc = exec_once();
 
+  	WP *wp = get_unallocated();
+	WP *temp = wp->next;
+
+	bool changed = false;
+	for(; temp != wp; temp = temp->next){
+		bool success = true;
+		uint32_t new_val = expr(temp->expression, &success);
+		if(success == true){
+			if(new_val == temp->old_val){
+				continue;
+			}
+			else{
+				changed = true;
+				printf("Watchpoint %d %s changed: old %08x -> new %08x\n", 
+						temp->NO, temp->expression, temp->old_val, new_val);
+				temp->old_val = new_val;
+			}
+		}
+		else{
+			printf("Watchpoint %d 's expression failed :%s\n", temp->NO, temp->expression);
+			nemu_state.state = NEMU_STOP;
+			break;
+		}
+	}
+    if(changed == true){
+    	nemu_state.state = NEMU_STOP;
+    }
+
 #if defined(DIFF_TEST)
   difftest_step(ori_pc, cpu.pc);
 #endif
@@ -84,4 +113,5 @@ void cpu_exec(uint64_t n) {
           nemu_state.halt_pc);
       monitor_statistic();
   }
+
 }

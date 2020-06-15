@@ -53,6 +53,13 @@ static int cmd_info(char* args){
 	if(args != NULL && strcmp(args , "r") == 0){
 		isa_reg_display();
 	}
+	else if(args != NULL && strcmp(args, "w") == 0){
+		WP *wp = get_unallocated();
+		WP *temp = wp;
+		for(; temp != wp; temp = temp->next){
+			printf("Watchpoint %d : %s %08x\n", temp->NO, temp->expression, temp->old_val);
+		}
+	}
 	return 0;
 }
 
@@ -84,6 +91,33 @@ static int cmd_p(char* args){
 	}
 	return 0;
 }
+
+static int cmd_watchpoint(char *args){
+	bool success = true;
+	uint32_t result = expr(args, &success);
+	if(success == true){
+		WP *new_wp();
+		WP *wp = new_wp();
+		wp->old_val = result;
+		assert(expr(args, &success) == result);
+		assert(success == true);
+		strcat(wp->expression, args);
+		printf("Watchpoint %d: %s -> %08x\n", wp->NO, wp->expression, wp->old_val);
+	}
+	else{
+		printf("Expression is not legal\n");
+	}
+	return 0;
+}
+
+static int cmd_d(char *args){
+	int nr_to_delete;
+	sscanf(args, "%d", &nr_to_delete);
+	free_wp(nr_to_delete);
+	printf("Watchpoint %d deleted\n", nr_to_delete);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -97,7 +131,10 @@ static struct {
   { "si", "Execution by step", cmd_si},
   { "info", "Print Registers or ...", cmd_info},
   { "x", "Scan Memory", cmd_x},
-  { "p", "Print value of expression", cmd_p}
+  { "p", "Print value of expression", cmd_p},
+  { "watchpoint", "Halt the program when the expression has changed", cmd_watchpoint},
+  { "w", "Halt the program when the expression has changed", cmd_watchpoint},
+  { "d", "delete a watchpoint", cmd_d}
   /* TODO: Add more commands */
 
 };
