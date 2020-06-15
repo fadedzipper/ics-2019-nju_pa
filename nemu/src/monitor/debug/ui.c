@@ -54,6 +54,7 @@ static int cmd_info(char* args){
 		isa_reg_display();
 	}
 	else if(args != NULL && strcmp(args, "w") == 0){
+		printf("reach here\n");
 		WP *wp = get_unallocated();
 		WP *temp = wp;
 		for(; temp != wp; temp = temp->next){
