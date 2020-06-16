@@ -55,7 +55,7 @@ $(OBJ_DIR)/%.o: src/%.c
 
 # Some convenient rules
 
-.PHONY: app run gdb clean run-env $(QEMU_SO)
+.PHONY: app run gdb cgdb clean run-env count mylog $(QEMU_SO)
 app: $(BINARY)
 
 override ARGS ?= -l $(BUILD_DIR)/nemu-log.txt
@@ -71,6 +71,12 @@ $(BINARY): $(OBJS)
 	@$(LD) -O2 -rdynamic $(SO_LDLAGS) -o $@ $^ -lSDL2 -lreadline -ldl
 
 run-env: $(BINARY) $(QEMU_SO)
+
+count:
+	find . |grep '\.c$\|\.h$' |xargs cat |grep -v ^$ | wc -l
+
+mylog:
+	git log --author mff --pretty=oneline --abbrev-commit --graph
 
 run: run-env
 	$(call git_commit, "run")
