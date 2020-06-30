@@ -73,7 +73,7 @@ $(BINARY): $(OBJS)
 run-env: $(BINARY) $(QEMU_SO)
 
 count:
-	find . |grep '\.c$\|\.h$' |xargs cat |grep -v ^$ | wc -l
+	find . |grep '\.c$$\|\.h$$' |xargs cat |grep -v ^$$ | wc -l
 
 mylog:
 	git log --author mff --pretty=oneline --abbrev-commit --graph
