@@ -46,10 +46,11 @@ void cpu_exec(uint64_t n) {
      * instruction decode, and the actual execution. */
     __attribute__((unused)) vaddr_t seq_pc = exec_once();
 
-  	WP *wp = get_unallocated();
+	/* Watchpoints are inspected in the end of a circle */
+  	WP *wp = get_unallocated(); 	
 	WP *temp = wp->next;
 
-	bool changed = false;
+	bool changed = false; // whether some Watchpoints are changed. display all of them
 	for(; temp != wp; temp = temp->next){
 		bool success = true;
 		uint32_t new_val = expr(temp->expression, &success);
