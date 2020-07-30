@@ -69,11 +69,11 @@ make_DHelper(J){
 			   (decinfo.isa.instr.imm11_ << 10) | \
 			   (decinfo.isa.instr.imm10_1);
 
-	printf("simm20 in J type = %08x\n", decinfo.isa.instr.simm20);
-	printf("imm19_12 in J type = %08x\n", decinfo.isa.instr.imm19_12);
-	printf("imm11 in J type = %08x\n", decinfo.isa.instr.imm11_);
-	printf("imm10_1 in J type = %08x\n", decinfo.isa.instr.imm10_1);
-	printf("simm in J type = %08x\n", simm);
+	Log("simm20 in J type = %08x\n", decinfo.isa.instr.simm20);
+	Log("imm19_12 in J type = %08x\n", decinfo.isa.instr.imm19_12);
+	Log("imm11 in J type = %08x\n", decinfo.isa.instr.imm11_);
+	Log("imm10_1 in J type = %08x\n", decinfo.isa.instr.imm10_1);
+	Log("simm in J type = %08x\n", simm);
 	decode_op_i(id_src, simm, true);
 
 	decode_op_r(id_dest, decinfo.isa.instr.rd, false);
