@@ -40,6 +40,17 @@ make_DHelper(ld) {
   decode_op_r(id_dest, decinfo.isa.instr.rd, false);
 }
 
+/*I type instruction and simm11_0 is sign-extension  */
+make_DHelper(I){
+  decode_op_r(id_src, decinfo.isa.instr.rs1, true);
+  int32_t simm = decinfo.isa.instr.simm11_0;
+  decode_op_i(id_src2, simm, true);
+
+  print_Dop(id_src->str, OP_STR_SIZE, "%d(%s)", id_src2->val, reg_name(id_src->reg, 4));
+
+  decode_op_r(id_dest, decinfo.isa.instr.rd, false);
+}
+
 make_DHelper(st) {
   decode_op_r(id_src, decinfo.isa.instr.rs1, true);
   int32_t simm = (decinfo.isa.instr.simm11_5 << 5) | decinfo.isa.instr.imm4_0;
@@ -50,4 +61,15 @@ make_DHelper(st) {
   rtl_add(&id_src->addr, &id_src->val, &id_src2->val);
 
   decode_op_r(id_dest, decinfo.isa.instr.rs2, true);
+}
+
+make_DHelper(J){
+	int simm = (decinfo.isa.instr.simm20 << 19) | \
+			   (decinfo.isa.instr.imm19_12 << 11) | \
+			   (decinfo.isa.instr.imm11_ << 10) | \
+			   (decinfo.isa.instr.imm10_1);
+
+	decode_op_i(id_src, simm, true);
+
+	decode_op_r(id_dest, decinfo.isa.instr.rd, false);
 }

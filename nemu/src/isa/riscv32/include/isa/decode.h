@@ -3,7 +3,7 @@
 
 typedef union {
   struct {
-    uint32_t opcode1_0 : 2;
+    uint32_t opcode1_0 : 2;	// R_TYPE
     uint32_t opcode6_2 : 5;
     uint32_t rd        : 5;
     uint32_t funct3    : 3;
@@ -15,7 +15,7 @@ typedef union {
     uint32_t pad0      :20;
     int32_t  simm11_0  :12;
   };
-  struct {
+  struct {			//st type instruction
     uint32_t pad1      : 7;
     uint32_t imm4_0    : 5;
     uint32_t pad2      :13;
@@ -33,7 +33,7 @@ typedef union {
     uint32_t pad5      :12;
     uint32_t imm31_12  :20;
   };
-  struct {
+  struct {			// J type instructions
     uint32_t pad6      :12;
     uint32_t imm19_12  : 8;
     uint32_t imm11_    : 1;
@@ -55,5 +55,7 @@ struct ISADecodeInfo {
 make_DHelper(U);
 make_DHelper(ld);
 make_DHelper(st);
+make_DHelper(I);
+make_DHelper(J);
 
 #endif
