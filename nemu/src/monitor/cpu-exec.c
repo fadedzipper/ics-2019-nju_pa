@@ -32,65 +32,66 @@ void monitor_statistic(void) {
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
-  switch (nemu_state.state) {
-    case NEMU_END: case NEMU_ABORT:
-      printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
-      return;
-    default: nemu_state.state = NEMU_RUNNING;
-  }
-
-  for (; n > 0; n --) {
-    __attribute__((unused)) vaddr_t ori_pc = cpu.pc;
-
-    /* Execute one instruction, including instruction fetch,
-     * instruction decode, and the actual execution. */
-    __attribute__((unused)) vaddr_t seq_pc = exec_once();
-
-	/* Watchpoints are inspected in the end of a circle */
-  	WP *wp = get_unallocated(); 	
-	WP *temp = wp->next;
-
-	bool changed = false; // whether some Watchpoints are changed. display all of them
-	for(; temp != wp; temp = temp->next){
-		bool success = true;
-		uint32_t new_val = expr(temp->expression, &success);
-		if(success == true){
-			if(new_val == temp->old_val){
-				continue;
-			}
-			else{
-				changed = true;
-				printf("Watchpoint %d %s changed: old %08x -> new %08x\n", 
-						temp->NO, temp->expression, temp->old_val, new_val);
-				temp->old_val = new_val;
-			}
-		}
-		else{
-			printf("Watchpoint %d 's expression failed :%s\n", temp->NO, temp->expression);
-			nemu_state.state = NEMU_STOP;
-			break;
-		}
+	switch (nemu_state.state) {
+	  case NEMU_END: case NEMU_ABORT:
+	    printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
+	    return;
+	  default: nemu_state.state = NEMU_RUNNING;
 	}
-    if(changed == true){
-    	nemu_state.state = NEMU_STOP;
-    }
+	
+	for (; n > 0; n --) {
+		__attribute__((unused)) vaddr_t ori_pc = cpu.pc;
+
+   		/* Execute one instruction, including instruction fetch,
+   		 * instruction decode, and the actual execution. */
+   		__attribute__((unused)) vaddr_t seq_pc = exec_once();
+
 
 #if defined(DIFF_TEST)
   difftest_step(ori_pc, cpu.pc);
 #endif
 
 #ifdef DEBUG
-  if (g_nr_guest_instr < LOG_MAX) {
-    asm_print(ori_pc, seq_pc - ori_pc, n < MAX_INSTR_TO_PRINT);
-  }
-  else if (g_nr_guest_instr == LOG_MAX) {
-    log_write("\n[Warning] To restrict the size of log file, "
-              "we do not record more instruction trace beyond this point.\n"
-              "To capture more trace, you can modify the LOG_MAX macro in %s\n\n", __FILE__);
-  }
-  log_clearbuf();
+		if (g_nr_guest_instr < LOG_MAX) {
+ 		  asm_print(ori_pc, seq_pc - ori_pc, n < MAX_INSTR_TO_PRINT);
+ 		}
+ 		else if (g_nr_guest_instr == LOG_MAX) {
+ 		  log_write("\n[Warning] To restrict the size of log file, "
+ 		            "we do not record more instruction trace beyond this point.\n"
+ 		            "To capture more trace, you can modify the LOG_MAX macro in %s\n\n", __FILE__);
+ 		}
+ 		log_clearbuf();
 
-    /* TODO: check watchpoints here. */
+ 		   /* TODO: check watchpoints here. */
+
+   		/* Watchpoints are inspected in the end of a circle */
+   		WP *wp = get_unallocated(); 	
+   		WP *temp = wp->next;
+
+   		bool changed = false; // whether some Watchpoints are changed. display all of them
+   		for(; temp != wp; temp = temp->next){
+   			bool success = true;
+   			uint32_t new_val = expr(temp->expression, &success);
+   			if(success == true){
+   				if(new_val == temp->old_val){
+   					continue;
+   				}
+   				else{
+   					changed = true;
+   					printf("Watchpoint %d %s changed: old %08x -> new %08x\n", 
+   							temp->NO, temp->expression, temp->old_val, new_val);
+   					temp->old_val = new_val;
+   				}
+   			}
+   			else{
+   				printf("Watchpoint %d 's expression failed :%s\n", temp->NO, temp->expression);
+   				nemu_state.state = NEMU_STOP;
+   				break;
+   			}
+   		}
+   		if(changed == true){
+   			nemu_state.state = NEMU_STOP;
+   		}
 
 #endif
 
