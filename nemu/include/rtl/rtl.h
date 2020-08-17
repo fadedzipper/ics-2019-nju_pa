@@ -145,11 +145,11 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 	}
 	else{
 		uint32_t u = ~0u >> ((4 - width) * 8) ;
-		printf("1u << (width * 8 - 1) = %08x\n", u);
+		/* printf("1u << (width * 8 - 1) = %08x\n", u); */
 		uint32_t v = ~0u >> (width * 8);
-		printf("1u << ((4 - width) * 8 - 1) = %08x\n", v);
+		/* printf("1u << ((4 - width) * 8 - 1) = %08x\n", v); */
 		uint32_t x = (*src1 & u) >> (width * 8 - 1);
-		printf("(*src1 & u) >> (width * 8 - 1) = %08x\n", x);
+		/* printf("(*src1 & u) >> (width * 8 - 1) = %08x\n", x); */
 		if (x == 1){
 			*dest = *src1 | ~u ;
 		}
