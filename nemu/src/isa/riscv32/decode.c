@@ -84,3 +84,16 @@ make_DHelper(R){
 	decode_op_r(id_dest, decinfo.isa.instr.rd, false);
 
 }
+
+make_DHelper(B){
+	/* simm is mutiples of the sign-extented offset */
+	int simm = (decinfo.isa.instr.simm12 << 12) | \
+			   (decinfo.isa.instr.imm11 << 11) | \
+			   (decinfo.isa.instr.imm10_5 << 5) | \
+			   (decinfo.isa.instr.imm4_1 << 1);
+	decode_op_i(id_dest, simm, true);
+
+	decode_op_r(id_src, decinfo.isa.instr.rs1, true);
+	decode_op_r(id_src2, decinfo.isa.instr.rs2, true);
+
+}

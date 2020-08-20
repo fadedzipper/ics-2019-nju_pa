@@ -22,7 +22,7 @@ typedef union {
     int32_t  simm11_5  : 7;
   };
   struct {
-    uint32_t pad3      : 7;
+    uint32_t pad3      : 7; //B type instruction
     uint32_t imm11     : 1;
     uint32_t imm4_1    : 4;
     uint32_t pad4      :13;
@@ -58,5 +58,6 @@ make_DHelper(st);
 make_DHelper(I);
 make_DHelper(J);
 make_DHelper(R);
+make_DHelper(B);
 
 #endif

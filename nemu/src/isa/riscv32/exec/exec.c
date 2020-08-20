@@ -68,12 +68,22 @@ static make_EHelper(reg_serial){
 	idex(pc, &reg_serial_table[decinfo.isa.instr.funct3]);
 }
 
+/* B-type serial instrucions exeute means */
+static OpcodeEntry B_serial_table [8] = {
+	EXW(beq, 4), EXW(bne, 4), EMPTY, EMPTY, EXW(blt, 4), EXW(bge, 4), EXW(bltu, 4), EXW(bgeu, 4)
+};
+
+static make_EHelper(B_serial){
+	decinfo.width = B_serial_table[decinfo.isa.instr.funct3].width;
+	idex(pc, &B_serial_table[decinfo.isa.instr.funct3]);
+}
+
 /* total instructions find exeute function */
 static OpcodeEntry opcode_table [32] = {
   /* b00 */ IDEX(ld, load), EMPTY, EMPTY, EMPTY, IDEX(I, imm_serial), IDEX(U, auipc), EMPTY, EMPTY,
   /* b01 */ IDEX(st, store), EMPTY, EMPTY, EMPTY, IDEX(R, reg_serial), IDEX(U, lui), EMPTY, EMPTY,
   /* b10 */ EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
-  /* b11 */ EMPTY, IDEX(I, jalr), EX(nemu_trap), IDEX(J, jal), EMPTY, EMPTY, EMPTY, EMPTY,
+  /* b11 */ IDEX(B, B_serial), IDEX(I, jalr), EX(nemu_trap), IDEX(J, jal), EMPTY, EMPTY, EMPTY, EMPTY,
 };
 
 void isa_exec(vaddr_t *pc) {
