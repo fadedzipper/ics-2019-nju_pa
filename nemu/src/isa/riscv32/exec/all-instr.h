@@ -1,7 +1,10 @@
 #include "cpu/exec.h"
 
+/* in ldst.c */
 make_EHelper(ld);
 make_EHelper(st);
+make_EHelper(lb);
+make_EHelper(lh);
 
 make_EHelper(inv);
 make_EHelper(nemu_trap);

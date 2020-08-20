@@ -3,7 +3,7 @@
 
 /* load instructions exeute means */
 static OpcodeEntry load_table [8] = {
-  EMPTY, EMPTY, EXW(ld, 4), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
+  EXW(lb, 1), EXW(lh, 2), EXW(ld, 4), EMPTY, EXW(ld, 1), EXW(ld, 2), EMPTY, EMPTY
 };
 
 static make_EHelper(load) {
@@ -13,7 +13,7 @@ static make_EHelper(load) {
 
 /* store instructions exeute means */
 static OpcodeEntry store_table [8] = {
-  EMPTY, EMPTY, EXW(st, 4), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
+  EXW(st, 1), EXW(st, 2), EXW(st, 4), EMPTY, EMPTY, EMPTY, EMPTY, EMPTY
 };
 
 static make_EHelper(store) {
