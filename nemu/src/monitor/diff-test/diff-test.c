@@ -43,6 +43,18 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc);
 void isa_difftest_attach(void);
 
+void difftest_attach() {
+#ifndef DIFF_TEST
+  return;
+#endif
+
+  is_detach = false;
+  is_skip_ref = false;
+  skip_dut_nr_instr = 0;
+
+  isa_difftest_attach();
+}
+
 void init_difftest(char *ref_so_file, long img_size) {
 #ifndef DIFF_TEST
   return;
@@ -115,6 +127,11 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
     return;
   }
 
+  if(skip_dut_nr_instr == 0){
+	difftest_attach();
+	return;
+  }
+
   ref_difftest_exec(1);
   ref_difftest_getregs(&ref_r);
 
@@ -125,14 +142,3 @@ void difftest_detach() {
   is_detach = true;
 }
 
-void difftest_attach() {
-#ifndef DIFF_TEST
-  return;
-#endif
-
-  is_detach = false;
-  is_skip_ref = false;
-  skip_dut_nr_instr = 0;
-
-  isa_difftest_attach();
-}
