@@ -1,5 +1,5 @@
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean
-ISA ?= riscv32
+ISA ?= x86
 ISAS = $(shell ls src/isa/)
 
 ifeq ($(filter $(ISAS), $(ISA)), ) # ISA must be valid
