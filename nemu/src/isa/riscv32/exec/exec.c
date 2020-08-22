@@ -42,7 +42,7 @@ static make_EHelper(imm_serial){
 
 /* R-type serial instructions exeute means */
 static OpcodeEntry reg_serial_ADD_table [2] = {
-	EXW(and, 4), EXW(sub, 4)
+	EXW(add, 4), EXW(sub, 4)
 };
 
 static make_EHelper(reg_serial_ADD){
