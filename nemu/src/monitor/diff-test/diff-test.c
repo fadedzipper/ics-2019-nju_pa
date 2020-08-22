@@ -46,7 +46,7 @@ void difftest_skip_ref() {
 void difftest_skip_dut(int nr_ref, int nr_dut) {
   skip_dut_nr_instr += nr_dut;
 
-  while (nr_ref -- > 0) {
+  while (nr_ref-- > 0) {
 	printf("ref exec 1 step %s %d\n", __FILE__, __LINE__);
     ref_difftest_exec(1);
   }
@@ -124,6 +124,8 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
   printf("is_detach = %d in ori_pc = %08x\n", is_detach, ori_pc);
   printf("skip_dut_nr_instr = %d in ori_pc = %08x\n", skip_dut_nr_instr, ori_pc);
   printf("is_skip_ref = %d in ori_pc = %08x\n", is_skip_ref, ori_pc);
+  if(skip_dut_nr_instr == 0)
+	difftest_attach();
 
   if (is_detach) return;
 
@@ -148,16 +150,6 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
     return;
   }
   printf("2\n");
-
-  if(skip_dut_nr_instr == 0){  //isa_difftest_attach accordingly
-	difftest_attach();
-	ref_difftest_getregs(&ref_r);
-	printf("get into checkregs\n");
-
-	checkregs(&ref_r, ori_pc);
-	return;
-  } 
-  printf("3\n");
 
   ref_difftest_exec(1);
   ref_difftest_getregs(&ref_r);
