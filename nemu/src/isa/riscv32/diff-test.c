@@ -15,7 +15,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
 	return true;
 }
 
-void isa_difftest_attach(void) {
+void isa_difftest_attach() {
 	switch(decinfo.isa.instr.pad3){ 
 		case 0x67 : // jalr need DUT (1,2), ref exec 1 step.dut exec 2 step.
 			difftest_skip_dut(1, 2);
@@ -28,5 +28,5 @@ void isa_difftest_attach(void) {
 		default :
 			break;
 	}
-	
+
 }

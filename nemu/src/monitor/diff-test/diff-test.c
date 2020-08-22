@@ -41,7 +41,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
 }
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc);
-void isa_difftest_attach(void);
+void isa_difftest_attach();
 
 void difftest_attach() {
 #ifndef DIFF_TEST
@@ -138,6 +138,10 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 
   if(skip_dut_nr_instr == 0){  //isa_difftest_attach accordingly
 	difftest_attach();
+	ref_difftest_getregs(&ref_r);
+	printf("get into checkregs\n");
+
+	checkregs(&ref_r, ori_pc);
 	return;
   } 
   printf("3\n");
