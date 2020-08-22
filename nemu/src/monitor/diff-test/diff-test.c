@@ -108,6 +108,7 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
 void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 	printf("get into defftest_step\n");
   CPU_state ref_r;
+  printf("is_detach = %d\n", is_detach);
 
   if (is_detach) return;
 
