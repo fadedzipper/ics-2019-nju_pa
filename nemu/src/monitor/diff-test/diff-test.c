@@ -134,11 +134,13 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
     is_skip_ref = false;
     return;
   }
+  printf("2\n");
 
   if(skip_dut_nr_instr == 0){  //isa_difftest_attach accordingly
 	difftest_attach();
 	return;
-  }
+  } 
+  printf("3\n");
 
   ref_difftest_exec(1);
   ref_difftest_getregs(&ref_r);
