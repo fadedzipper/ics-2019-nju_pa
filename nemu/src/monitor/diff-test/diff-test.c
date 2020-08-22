@@ -157,7 +157,6 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
  	  is_skip_ref = false;
  	  return;
  	}
- 	printf("2\n");
 
  	ref_difftest_exec(1);
  	ref_difftest_getregs(&ref_r);
