@@ -136,6 +136,7 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
   ref_difftest_getregs(&ref_r);
 
   checkregs(&ref_r, ori_pc);
+  printf("test in ori_pc = %08x, ref_r->pc = %08x pass\n", ori_pc, ref_r.pc);
 }
 
 void difftest_detach() {
