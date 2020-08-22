@@ -123,10 +123,6 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
   }
-  else{
-	printf("test in pc compared to qemu(ori_pc or next_pc) = %08x," \
-			"ref_r->pc = %08x pass\n", pc, ref->pc);
-  }
 }
 
 void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
@@ -177,6 +173,8 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 
  	checkregs(&ref_r, next_pc);
 
+	printf("test in pc %08x pass, now riscv32_pc %08x, qemu_pc %08x\n", \
+			ori_pc, cpu.pc, ref_r.pc);
 	vaddr_t abort_pc = 0x80100080;
 	if(ori_pc == abort_pc){
 		exec_instrs_abort_in_pc(&ref_r, abort_pc);
