@@ -109,6 +109,7 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
     extern void isa_reg_display(void);
     isa_reg_display();
+	printf("pc compared to qemu -> %08x\n", pc);
 	qemu_reg_display(ref);
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
