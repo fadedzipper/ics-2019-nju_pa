@@ -108,9 +108,9 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
 void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 	printf("get into defftest_step\n");
   CPU_state ref_r;
-  printf("is_detach = %d\n", is_detach);
-  printf("skip_dut_nr_instr = %d\n", skip_dut_nr_instr);
-  printf("is_skip_ref = %d\n", is_skip_ref);
+  printf("is_detach = %d in ori_pc = %08x\n", is_detach, ori_pc);
+  printf("skip_dut_nr_instr = %d in ori_pc = %08x\n", skip_dut_nr_instr, ori_pc);
+  printf("is_skip_ref = %d in ori_pc = %08x\n", is_skip_ref, ori_pc);
 
   if (is_detach) return;
 
