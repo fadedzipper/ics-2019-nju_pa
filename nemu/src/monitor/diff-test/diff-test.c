@@ -12,6 +12,17 @@ static bool is_skip_ref = false;
 static int skip_dut_nr_instr = 0;
 static bool is_detach = false;
 
+void qemu_reg_display(CPU_state *ref_r){
+	extern const char *regsl[];
+	printf("\nqemu registers \n");
+	for(int i = 0; i < 32; i++){
+		if(i % 4 == 0) printf("\n");
+		printf("%5s -> %08x", regsl[i], ref_r->gpr[i]._32);
+	}
+	printf("\n");
+}
+
+
 // this is used to let ref skip instructions which
 // can not produce consistent behavior with NEMU
 void difftest_skip_ref() {
@@ -97,6 +108,7 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
     extern void isa_reg_display(void);
     isa_reg_display();
+	qemu_reg_display(ref);
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
   }
