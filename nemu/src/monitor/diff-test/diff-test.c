@@ -111,11 +111,13 @@ static void checkregs(CPU_state *ref, vaddr_t pc) {
     isa_reg_display();
 	printf("pc compared to qemu -> %08x\n", pc);
 	qemu_reg_display(ref);
+
     nemu_state.state = NEMU_ABORT;
     nemu_state.halt_pc = pc;
   }
   else{
-	printf("test in ori_pc = %08x, ref_r->pc = %08x pass\n", pc, ref->pc);
+	printf("test in pc compared to qemu(ori_pc or next_pc) = %08x," \
+			"ref_r->pc = %08x pass\n", pc, ref->pc);
   }
 }
 
