@@ -47,6 +47,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
   skip_dut_nr_instr += nr_dut;
 
   while (nr_ref -- > 0) {
+	printf("ref exec 1 step %s %d", __FILE__, __LINE__);
     ref_difftest_exec(1);
   }
 }
