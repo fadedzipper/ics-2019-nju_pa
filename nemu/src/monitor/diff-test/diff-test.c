@@ -173,10 +173,12 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 
  	checkregs(&ref_r, next_pc);
 
-	if(nemu_state.state != NEMU_ABORT)
-		printf("test in pc %08x pass, now riscv32_pc %08x, qemu_pc %08x\n", \
-				ori_pc, cpu.pc, ref_r.pc);
+	// debug information
+	/* if(nemu_state.state != NEMU_ABORT) */
+	/* 	printf("test in pc %08x pass, now riscv32_pc %08x, qemu_pc %08x\n", \ */
+	/* 			ori_pc, cpu.pc, ref_r.pc); */
 
+	// abort nemu in special pc
 	/* vaddr_t abort_pc = 0x8010007c; */
 	/* if(ori_pc == abort_pc){ */
 	/* 	exec_instrs_abort_in_pc(&ref_r, abort_pc); */
