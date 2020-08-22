@@ -126,6 +126,7 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
       panic("can not catch up with ref.pc = %x at pc = %x", ref_r.pc, ori_pc);
     return;
   }
+  printf("1\n");
 
   if (is_skip_ref) {
     // to skip the checking of an instruction, just copy the reg state to reference design
