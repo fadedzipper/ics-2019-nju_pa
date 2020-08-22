@@ -13,7 +13,7 @@ extern CPU_state cpu;
 void isa_reg_display() {
 	for(int i = 0; i < 32; i++){
 		if(i % 4 == 0) printf("\n");
-		printf("%8s -> %x", regsl[i], cpu.gpr[i]._32);
+		printf("%5s -> %08x", regsl[i], cpu.gpr[i]._32);
 	}
 	printf("\n");
 }
