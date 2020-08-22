@@ -175,10 +175,11 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 
 	printf("test in pc %08x pass, now riscv32_pc %08x, qemu_pc %08x\n", \
 			ori_pc, cpu.pc, ref_r.pc);
-	vaddr_t abort_pc = 0x80100080;
-	if(ori_pc == abort_pc){
-		exec_instrs_abort_in_pc(&ref_r, abort_pc);
-	}
+
+	/* vaddr_t abort_pc = 0x80100080; */
+	/* if(ori_pc == abort_pc){ */
+	/* 	exec_instrs_abort_in_pc(&ref_r, abort_pc); */
+	/* } */
 }
 
 void difftest_detach() {
