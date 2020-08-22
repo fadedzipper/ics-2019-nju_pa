@@ -12,7 +12,8 @@ const char *regsl[] = {
 extern CPU_state cpu;
 void isa_reg_display() {
 	for(int i = 0; i < 32; i++){
-		printf("%s -> %x\n", regsl[i], cpu.gpr[i]._32);
+		if(i % 4 == 0) printf("\n");
+		printf("%s -> %x\t", regsl[i], cpu.gpr[i]._32);
 	}
 }
 
