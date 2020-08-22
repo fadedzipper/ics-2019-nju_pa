@@ -160,7 +160,7 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 
  	ref_difftest_exec(1);
  	ref_difftest_getregs(&ref_r);
- 	printf("get into checkregs\n");
+ 	printf("get into checkregs %s %d\n", __FILE__, __LINE__);
 
  	checkregs(&ref_r, ori_pc);
 }
