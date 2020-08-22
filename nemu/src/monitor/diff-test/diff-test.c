@@ -22,6 +22,14 @@ void qemu_reg_display(CPU_state *ref_r){
 	printf("\nqemu pc -> %08x\n", ref_r->pc);
 }
 
+void exec_instrs_abort_in_pc(CPU_state *ref, vaddr_t ori_pc){
+    extern void isa_reg_display(void);
+    isa_reg_display();
+	qemu_reg_display(ref);
+
+    nemu_state.state = NEMU_ABORT;
+    nemu_state.halt_pc = ori_pc;
+}
 
 // this is used to let ref skip instructions which
 // can not produce consistent behavior with NEMU
@@ -168,6 +176,11 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
 	/* printf("get into checkregs %s :%s in %d line\n", __FILE__, __func__, __LINE__); */
 
  	checkregs(&ref_r, next_pc);
+
+	vaddr_t abort_pc = 0x80100080;
+	if(ori_pc == abort_pc){
+		exec_instrs_abort_in_pc(&ref_r, abort_pc);
+	}
 }
 
 void difftest_detach() {
