@@ -110,6 +110,7 @@ void difftest_step(vaddr_t ori_pc, vaddr_t next_pc) {
   CPU_state ref_r;
   printf("is_detach = %d\n", is_detach);
   printf("skip_dut_nr_instr = %d\n", skip_dut_nr_instr);
+  printf("is_skip_ref = %d\n", is_skip_ref);
 
   if (is_detach) return;
 
