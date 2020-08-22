@@ -16,7 +16,7 @@ void isa_reg_display() {
 		if(i % 4 == 0) printf("\n");
 		printf("%5s -> %08x", regsl[i], cpu.gpr[i]._32);
 	}
-	printf("\n");
+	printf("pc -> %08x\n", cpu.pc);
 }
 
 uint32_t isa_reg_str2val(const char *s, bool *success) {

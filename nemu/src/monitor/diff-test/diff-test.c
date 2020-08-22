@@ -19,7 +19,7 @@ void qemu_reg_display(CPU_state *ref_r){
 		if(i % 4 == 0) printf("\n");
 		printf("%5s -> %08x", regsl[i], ref_r->gpr[i]._32);
 	}
-	printf("\n");
+	printf("qemu pc -> %08x\n", ref_r->pc);
 }
 
 
