@@ -78,10 +78,29 @@ static make_EHelper(B_serial){
 	idex(pc, &B_serial_table[decinfo.isa.instr.funct3]);
 }
 
+/* M-extension serial instructions exeute means */
+static OpcodeEntry Mext_serial_table [8] = {
+	EXW(mul, 4), EXW(mulh, 4), EXW(mulhsu, 4), EXW(mulhu, 4), EXW(div, 4), EXW(divu, 4), EXW(rem, 4), EXW(remu, 4)
+};
+
+static make_EHelper(Mext_serial){
+	decinfo.width = Mext_serial_table[decinfo.isa.instr.funct3].width;
+	idex(pc, &Mext_serial_table[decinfo.isa.instr.funct3]);
+}
+
+/* M-extension conflict with R-type */ 
+static OpcodeEntry MR_conflict_table [2] = {
+	EXW(reg_serial, 4), EXW(Mext_serial, 4)
+};
+
+static make_EHelper(MR_conflict){
+	idex(pc, &MR_conflict_table[GETBITFUNCT7_0(decinfo.isa.instr.funct7)]);
+}
+
 /* total instructions find exeute function */
 static OpcodeEntry opcode_table [32] = {
   /* b00 */ IDEX(ld, load), EMPTY, EMPTY, EMPTY, IDEX(I, imm_serial), IDEX(U, auipc), EMPTY, EMPTY,
-  /* b01 */ IDEX(st, store), EMPTY, EMPTY, EMPTY, IDEX(R, reg_serial), IDEX(U, lui), EMPTY, EMPTY,
+  /* b01 */ IDEX(st, store), EMPTY, EMPTY, EMPTY, IDEX(R, MR_conflict), IDEX(U, lui), EMPTY, EMPTY,
   /* b10 */ EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,
   /* b11 */ IDEX(B, B_serial), IDEX(I, jalr), EX(nemu_trap), IDEX(J, jal), EMPTY, EMPTY, EMPTY, EMPTY,
 };

@@ -19,6 +19,7 @@
 #define rtl_mul_hi    concat(RTL_PREFIX, _rtl_mul_hi  )
 #define rtl_imul_lo   concat(RTL_PREFIX, _rtl_imul_lo )
 #define rtl_imul_hi   concat(RTL_PREFIX, _rtl_imul_hi )
+#define rtl_iumul_hi  concat(RTL_PREFIX, _rtl_iumul_hi)
 #define rtl_div_q     concat(RTL_PREFIX, _rtl_div_q   )
 #define rtl_div_r     concat(RTL_PREFIX, _rtl_div_r   )
 #define rtl_idiv_q    concat(RTL_PREFIX, _rtl_idiv_q  )

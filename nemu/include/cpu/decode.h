@@ -44,6 +44,7 @@ extern DecodeInfo decinfo;
 #define id_dest (&decinfo.dest)
 
 #define GETBIT30(instr) ((((uint32_t)instr) & ((uint32_t)(1<<30))) >> 30)
+#define GETBITFUNCT7_0(funct7) ( (funct7) & (1u) )
 
 #ifdef DEBUG
 #define print_Dop(...) snprintf(__VA_ARGS__)
