@@ -37,7 +37,7 @@ int sprintf(char *out, const char *fmt, ...) {
 					break;
 				}
 				s = va_arg(ap, char *);
-				strcat(out, s);
+				strncpy(out + pos, s, strlen(s));
 				pos += strlen(s);
 				flag = 0;
 				break;
@@ -72,7 +72,7 @@ int sprintf(char *out, const char *fmt, ...) {
 					x[t] = temp[t];
 				}
 				x[i] = '\0';
-				strcat(out, x);
+				strncpy(out + pos, x, i);
 				pos += i;
 				flag = 0;
 				break;
@@ -104,6 +104,7 @@ int sprintf(char *out, const char *fmt, ...) {
 		fmt++;
 	}
 	va_end(ap);
+	out[pos] = '\0';
 
 	return 0;
 }
