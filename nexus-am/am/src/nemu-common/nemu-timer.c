@@ -6,8 +6,9 @@ size_t __am_timer_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
     case _DEVREG_TIMER_UPTIME: {
       _DEV_TIMER_UPTIME_t *uptime = (_DEV_TIMER_UPTIME_t *)buf;
-	  uptime->lo = *(volatile uint16_t *)RTC_ADDR;
-      uptime->hi = *(volatile uint16_t *)(RTC_ADDR + 2);
+	  uint32_t reg = *(volatile uint32_t *)RTC_ADDR;
+	  uptime->lo = reg & 0xffff;
+      uptime->hi = reg >> 16;
       return sizeof(_DEV_TIMER_UPTIME_t);
     }
     case _DEVREG_TIMER_DATE: {

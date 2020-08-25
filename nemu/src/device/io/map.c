@@ -31,8 +31,8 @@ uint32_t map_read(paddr_t addr, int len, IOMap *map) {
   check_bound(map, addr);
   uint32_t offset = addr - map->low;
 
-  printf("%s %s %d: paddr_t addr = %08x, map->low = map->low = %08x, offset = %08x\n", \
-		  __FILE__, __func__, __LINE__, addr, map->low, offset);
+  /* printf("%s %s %d: paddr_t addr = %08x, map->low = map->low = %08x, offset = %08x\n", \ */
+		  /* __FILE__, __func__, __LINE__, addr, map->low, offset); */
 
   invoke_callback(map->callback, offset, len, false); // prepare data to read
 
