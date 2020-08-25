@@ -31,7 +31,7 @@ size_t __am_video_write(uintptr_t reg, void *buf, size_t size) {
 				/* printf("reach here\n"); */
 				/* x, y, i, j */
 
-				outl(FB_ADDR + 4 * ( ctl->x + 500*ctl->y + i + 500*j ), *ctl->pixels);
+				outl(FB_ADDR + 4 * ( ctl->x + 300*ctl->y + i + 300*j ), *ctl->pixels);
 			}
 		}
 
