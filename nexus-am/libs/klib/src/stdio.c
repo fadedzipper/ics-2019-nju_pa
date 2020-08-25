@@ -9,7 +9,7 @@ int printf(const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
 	char msg[512];
-	vsprintf(msg, fmt, ap);
+	int pos = vsprintf(msg, fmt, ap);
 
 	void _putc(char ch);
 	for(int  i = 0; i < 512 && msg[i] != '\0'; i ++){
@@ -17,7 +17,7 @@ int printf(const char *fmt, ...) {
 	}
 
 	va_end(ap);
-	return 0;
+	return pos;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
@@ -111,14 +111,15 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 	}
 	out[pos] = '\0';
 
-	return 0;
+	return pos;
 }
 
 int sprintf(char *out, const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
-	vsprintf(out, fmt, ap);
+	int pos = vsprintf(out, fmt, ap);
 	va_end(ap);
+	return pos;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
