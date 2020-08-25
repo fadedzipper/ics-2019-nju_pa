@@ -11,7 +11,7 @@ size_t __am_video_read(uintptr_t reg, void *buf, size_t size) {
       info->width = in >> 16;
       info->height = in & 0xffff;
 
-	  printf("width = %d, height = %d\n", info->width, info->height);
+	  /* printf("width = %d, height = %d\n", info->width, info->height); */
 
       return sizeof(_DEV_VIDEO_INFO_t);
     }
@@ -25,14 +25,21 @@ size_t __am_video_write(uintptr_t reg, void *buf, size_t size) {
       _DEV_VIDEO_FBCTL_t *ctl = (_DEV_VIDEO_FBCTL_t *)buf;
 
       if (ctl->sync) {
-		  printf("1\n");
+		  /* printf("1\n"); */
         outl(SYNC_ADDR, 1);
-		  printf("2\n");
+		int i, j;
+		for(i = 0; i < ctl->w; i++){
+			for(j = 0; j < ctl->h; j++){
+				outl(FB_ADDR + ctl->x + 400*ctl->y + i + 400*j, *ctl->pixels);
+			}
+		}
+
+		  /* printf("2\n"); */
       }
 	  else{
-		  printf("11\n");
+		  /* printf("11\n"); */
 		outl(SYNC_ADDR, 0);
-		  printf("22\n");
+		  /* printf("22\n"); */
 	  }
       return size;
     }
