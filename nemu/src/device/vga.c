@@ -31,7 +31,7 @@ static inline void update_screen() {
 
 static void vga_screen_io_handler(uint32_t offset, int len, bool is_write) {
 
-	printf("offset = %08x\n", offset);
+	/* printf("offset = %08x\n", offset); */
 	assert(!is_write);
 	/* do nothing ,because init_vga has do the affirs*/
 	return;
@@ -61,12 +61,12 @@ void init_vga() {
 
   screensize_port_base = (void *)new_space(4);
   screensize_port_base[0] = ((SCREEN_W) << 16) | (SCREEN_H);
-  add_pio_map("screen", SCREEN_PORT, (void *)screensize_port_base, 8, vga_screen_io_handler);
-  add_mmio_map("screen", SCREEN_MMIO, (void *)screensize_port_base, 8, vga_screen_io_handler);
+  add_pio_map("screen", SCREEN_PORT, (void *)screensize_port_base, 4, vga_screen_io_handler);
+  add_mmio_map("screen", SCREEN_MMIO, (void *)screensize_port_base, 4, vga_screen_io_handler);
 
   vga_sync_port_base = (void *)new_space(4);
-  add_pio_map("vga_sync", SYNC_PORT, (void *)vga_sync_port_base, 8, vga_sync_io_handler);
-  add_mmio_map("vga_sync", SYNC_MMIO, (void *)vga_sync_port_base, 8, vga_sync_io_handler);
+  add_pio_map("vga_sync", SYNC_PORT, (void *)vga_sync_port_base, 4, vga_sync_io_handler);
+  add_mmio_map("vga_sync", SYNC_MMIO, (void *)vga_sync_port_base, 4, vga_sync_io_handler);
 
   vmem = (void *)new_space(0x80000);
   add_mmio_map("vmem", VMEM, (void *)vmem, 0x80000, NULL);
