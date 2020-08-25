@@ -27,8 +27,11 @@ size_t __am_video_write(uintptr_t reg, void *buf, size_t size) {
 		int i, j;
 		for(i = 0; i < ctl->w; i++){
 			for(j = 0; j < ctl->h; j++){
-				printf("reach here\n");
-				outl(FB_ADDR + ctl->x + 400*ctl->y + i + 400*j, *ctl->pixels);
+
+				/* printf("reach here\n"); */
+				/* x, y, i, j */
+
+				outl(FB_ADDR + ctl->y + 400*ctl->x + j + 400*i, *ctl->pixels);
 			}
 		}
 
