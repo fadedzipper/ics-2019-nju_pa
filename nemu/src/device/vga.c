@@ -31,6 +31,7 @@ static inline void update_screen() {
 
 static void vga_screen_io_handler(uint32_t offset, int len, bool is_write) {
 
+	printf("offset = %08x\n", offset);
 	assert(!is_write);
 	/* do nothing ,because init_vga has do the affirs*/
 	return;
