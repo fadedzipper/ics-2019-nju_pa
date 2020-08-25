@@ -58,12 +58,12 @@ void init_vga() {
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
       SDL_TEXTUREACCESS_STATIC, SCREEN_W, SCREEN_H);
 
-  screensize_port_base = (void *)new_space(8);
+  screensize_port_base = (void *)new_space(4);
   screensize_port_base[0] = ((SCREEN_W) << 16) | (SCREEN_H);
   add_pio_map("screen", SCREEN_PORT, (void *)screensize_port_base, 8, vga_screen_io_handler);
   add_mmio_map("screen", SCREEN_MMIO, (void *)screensize_port_base, 8, vga_screen_io_handler);
 
-  vga_sync_port_base = (void *)new_space(8);
+  vga_sync_port_base = (void *)new_space(4);
   add_pio_map("vga_sync", SYNC_PORT, (void *)vga_sync_port_base, 8, vga_sync_io_handler);
   add_mmio_map("vga_sync", SYNC_MMIO, (void *)vga_sync_port_base, 8, vga_sync_io_handler);
 
